@@ -1,11 +1,4 @@
-<<<<<<< HEAD:2020-06-12/src/Main.java
-<<<<<<< HEAD
-//일구씨. 배가고프네요. 저는 조장입니다.
-=======
-// 화이팅!!
->>>>>>> 7d8d57d124c5f4c6653b6d35e68a4bb38360d4d8
-=======
->>>>>>> f7378222a8342eac96ee20a88c4c65d9714f7d3f:src/Main.java
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;

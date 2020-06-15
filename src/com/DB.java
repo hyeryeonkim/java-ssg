@@ -34,7 +34,7 @@ public class DB {
 		return null;
 	}
 	
-	private List<Member> getMembers() {
+	public List<Member> getMembers() {
 		return tables.get("member").getRows();
 	}
 	

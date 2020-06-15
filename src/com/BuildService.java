@@ -28,22 +28,12 @@ class BuildService {
 		for (Board board : boards) {
 			
 			String fileName = board.getCode() + "-list-1.html";
-
-			String html = "";
+			String html = "<div class=\"boardName\">" + board.getName() + "</div>";
 
 			List<Article> articles = Factory.getDB().getArticlesByBoardCode(board.getCode());
 			
-//			String template = Util.getFileContents("site_template/article/list.html");
-			
-			html += "<table border=\"1\" width=\"600px\">";
-			html += "<caption>" + board.getCode() + " 게시물 리스트</caption>";
-		    html += "<colgroup>";
-		    html += "<col width=\"7%\">";
-		    html += "<col width=\"+%\">";
-		    html += "<col width=\"10%\">";
-		    html += "<col width=\"28%\">";
-		    html += "<col width=\"13%\">";
-		    html += "</colgroup>";
+			html += Util.getFileContents("site_template/article/list.html");
+			html += "<table class=\"list\" border=\"1\">";
 			
 			html += "<thead>";
 			html += "<tr>";
@@ -51,17 +41,17 @@ class BuildService {
 			html += "<th>제목</th>";
 			html += "<th>작성자</th>";
 			html += "<th>작성일</th>";
-			html += "<th>상세보기</th>";
+			html += "<th>조회</th>";
 			html += "</thead>";
 			
-			for (Article article : articles) {
+			for (Article article : articles) {		
 				html += "<tbody>";
 				html += "<tr>";
 				html += "<td>" + article.getId() + "</td>";
-				html += "<td>" + article.getTitle() + "</td>";
+				html += "<td><a href=\"" + article.getId() + ".html\">" + article.getTitle() + "</a></td>";
 				html += "<td>" + article.getMemberName() + "</td>";
 				html += "<td>" + article.getRegDate() + "</td>";
-				html += "<td><a href=\"" + article.getId() + ".html\">" + article.getTitle() + "</a></td>";
+				html += "<td>" + article.getHit() + "</td>"; // 조회수로 바꾸기
 				html += "</tr>";
 				html += "</tbody>";
 			}
@@ -95,6 +85,88 @@ class BuildService {
 
 			Util.writeFileContents("site/article/" + article.getId() + ".html", html);
 		}
+		// home파일 생성(index.html 대신 사용)
+		String home = Util.getFileContents("site_template/article/homeImage.html"); // 혜련 추가
+		String homeFileName = "home.html";
+		String homeHtml = "";
+		homeHtml = head + homeHtml + home + foot;
+		Util.writeFileContents("site_template/part/" + homeFileName, homeHtml);
+		
+		//통계
+//		List<Board> allBoard = Factory.getDB().getBoards();
+//		
+//		for (int i = 0; i <= allBoard.size(); i++) {
+//			 
+//		}
+		List<Member> members = Factory.getDB().getMembers();
+		List<Article> articles2 = Factory.getDB().getArticles();
+		List<Article> frees = Factory.getDB().getArticlesByBoardCode("free");
+		List<Article> notice = Factory.getDB().getArticlesByBoardCode("notice");
+		String fileName3 = "stat.html";
+		String template3 = Util.getFileContents("site_template/article/stat.html");
+		
+		String stat = "";
+		stat += template3;
+		stat += " <div class=\"boardName\">통계</div>";
+		stat += "<table border=\"1\">";
+		stat += "<thead>";
+		
+		stat += "<tr>";
+		stat += "<th>회원수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>전체 게시물 수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>자유게시판 게시물 수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>공지사항 게시물 수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>전체 게시물 조회 수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>자유게시판 게시물 조회수</th>";
+		stat += "</tr>";
+		
+		stat += "<tr>";
+		stat += "<th>공지사항 게시물 조회수</th>";
+		stat += "</tr>";
+		stat += "</thead>";
+		
+		stat += "<tbody>";
+		stat += "<tr>";
+		stat += "<td>" + members.size() + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + articles2.size() + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + frees.size() + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + notice.size() + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + "미구현" + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + "미구현" + "</td>";
+		stat += "</tr>";
+		stat += "<tr>";
+		stat += "<td>" + "미구현" + "</td>";
+		stat += "</tr>";
+		stat += "</tbody>";
+
+		stat = head + stat + foot;
+
+		Util.writeFileContents("site/article/" + fileName3, stat);
 	}
 
 	public void buildStartAutoSite() {
